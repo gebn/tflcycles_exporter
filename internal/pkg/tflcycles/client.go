@@ -39,7 +39,7 @@ func NewClient(httpClient *http.Client, opts ...ClientOption) *Client {
 	return c
 }
 
-func (c *Client) buildRequest() *http.Request {
+func (c Client) buildRequest() *http.Request {
 	req, err := http.NewRequest(http.MethodGet, "https://api.tfl.gov.uk/BikePoint", nil)
 	if err != nil {
 		// We're fully in control of this part; the tests will fail if this
