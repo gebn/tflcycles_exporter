@@ -17,11 +17,11 @@ import (
 var (
 	httpRequestDuration = promauto.NewHistogram(prometheus.HistogramOpts{
 		Name: "tflcycles_http_request_duration_seconds",
-		Help: "",
+		Help: "Observes the duration of all requests to /BikePoint.",
 	})
 	httpRequestFailures = promauto.NewCounter(prometheus.CounterOpts{
 		Name: "tflcycles_http_request_failures_total",
-		Help: "",
+		Help: "Counts the number of requests to /BikePoint that returned a non-200 status or timed out.",
 	})
 
 	handlerOpts = promhttp.HandlerOpts{
