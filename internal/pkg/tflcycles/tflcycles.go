@@ -30,26 +30,34 @@ func init() {
 
 // Station contains relatively-stable metadata about a docking station.
 type Station struct {
-	//ID int // e.g. 112
-	Name string // e.g. Stonecutter Street, Holborn
-	// Terminal string // e.g. 001061
-	// Latitude float32 // lat, WGS84 latitude of the location
-	// Longitude float32 // lon, WGS84 longitude of the location
-	// Installed time.Time // InstallDate, zero value means not installed // This will not work as same stations are installed but do not have an install date
-	// IsTemporary bool
-	// IsLocked bool // what does this mean - whole thing out of action?
+	// Name is the human-readable location of the station, e.g. "Stonecutter
+	// Street, Holborn". It is taken from the `commonName` field of the JSON.
+	Name string
 
-	Docks int // NbDocks
+	// Docks indicates the total number of docks at the station, including
+	// those out of service. It is taken from the `NbDocks` property of the
+	// JSON.
+	Docks int
 }
 
+// Availability represents the hire and drop-off services available at a
+// station based on its occupancy.
 type Availability struct {
 	// This was originally called Occupancy, however that made a Docks field
-	// ambiguous. Now, values in this struct are all what is available to use.
+	// ambiguous. Now, values in this struct all represent resources available
+	// to use.
 
-	// AsOf time.Time // modified
-	Docks  int // NbEmptyDocks
-	Bikes  int // NbStandardBikes
-	EBikes int // NbEBikes
+	// Docks is the number of in-service, vacant docks to which a bike can be
+	// returned. It is taken from the `NbEmptyDocks` property.
+	Docks int
+
+	// Bikes is the number of in-service, non-electric bikes available for
+	// hire. It is taken from the `NbStandardBikes` property.
+	Bikes int
+
+	// EBikes is the number of in-service, electric bikes available for hire.
+	// It is taken from the `NbEBikes` property.
+	EBikes int
 }
 
 // StationAvailability represents the occupancy of bikes at a particular
