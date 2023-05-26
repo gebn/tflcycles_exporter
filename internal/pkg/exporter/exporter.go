@@ -32,7 +32,6 @@ var (
 
 type Exporter struct {
 	Client *tflcycles.Client
-	//StationIDs []int
 }
 
 func (e Exporter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
