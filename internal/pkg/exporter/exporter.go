@@ -15,13 +15,13 @@ import (
 )
 
 var (
-	httpRequestDuration = promauto.NewHistogram(prometheus.HistogramOpts{
-		Name: "tflcycles_http_request_duration_seconds",
-		Help: "Observes the duration of all requests to /BikePoint.",
+	fetchDuration = promauto.NewHistogram(prometheus.HistogramOpts{
+		Name: "tflcycles_exporter_fetch_duration_seconds",
+		Help: "Observes the end-to-end duration of fetch operations.",
 	})
-	httpRequestFailures = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "tflcycles_http_request_failures_total",
-		Help: "Counts the number of requests to /BikePoint that returned a non-200 status or timed out.",
+	fetchFailures = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "tflcycles_exporter_fetch_failures_total",
+		Help: "Counts the number of fetch operations that have failed.",
 	})
 
 	handlerOpts = promhttp.HandlerOpts{
@@ -40,9 +40,9 @@ func (e Exporter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 	stationAvailabilities, err := e.Client.FetchStationAvailabilities(ctx)
 	elapsed := time.Since(start)
-	httpRequestDuration.Observe(elapsed.Seconds())
+	fetchDuration.Observe(elapsed.Seconds())
 	if err != nil {
-		httpRequestFailures.Inc()
+		fetchFailures.Inc()
 		log.Printf("failed to fetch station availabilities: %v", err)
 		// stationAvailabilities will be nil.
 	}
