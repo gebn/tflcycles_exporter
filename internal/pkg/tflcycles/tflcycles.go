@@ -85,8 +85,6 @@ type (
 )
 
 func (sa *StationAvailability) UnmarshalJSON(b []byte) error {
-	// We could decode Name in place, but we wouldn't have
-	// additionalProperties.
 	var p place
 	if err := json.Unmarshal(b, &p); err != nil {
 		return err
