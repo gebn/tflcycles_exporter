@@ -39,9 +39,19 @@ var (
 // have to decode the JSON and then delete bits from the output. This is left
 // to the user of the client.
 type Client struct {
+
+	// HTTPClient is the client used to make requests to the API. This must be
+	// provided when calling NewClient().
 	HTTPClient *http.Client
-	Timeout    time.Duration
-	AppKey     string
+
+	// Timeout is the per-attempt request timeout. This can be configured using
+	// WithTimeout().
+	Timeout time.Duration
+
+	// AppKey is the TfL Unified API application key to attach to requests. If
+	// empty, anonymous access will be used. This can be configured using
+	// WithAppKey().
+	AppKey string
 
 	req *http.Request
 }
