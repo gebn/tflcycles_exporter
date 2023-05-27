@@ -30,6 +30,8 @@ var (
 	}
 )
 
+// Exporter is an http.Handler that will respond to Prometheus scrape requests
+// with information about stations' dock and cycle availability.
 type Exporter struct {
 	Client *tflcycles.Client
 }

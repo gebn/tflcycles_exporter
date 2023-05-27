@@ -33,6 +33,8 @@ var (
 	)
 )
 
+// StationAvailabilitiesCollector is a prometheus.Collector yielding metrics
+// about retrieved dock and bike availability data.
 type StationAvailabilitiesCollector struct {
 	StationAvailabilities []tflcycles.StationAvailability
 }

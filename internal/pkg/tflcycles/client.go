@@ -32,9 +32,12 @@ var (
 	// which is tracked by the exporter.
 )
 
-// Client does not implement station ID filtering as there would be no point -
-// we'd have to decode the JSON and then delete bits from the output. We may as
-// well leave this to the library user.
+// Client is used to interact with the BikePoint API. Create instances with
+// NewClient().
+//
+// We do not implement station filtering here as there would be no point - we'd
+// have to decode the JSON and then delete bits from the output. This is left
+// to the user of the client.
 type Client struct {
 	HTTPClient *http.Client
 	Timeout    time.Duration
@@ -43,6 +46,8 @@ type Client struct {
 	req *http.Request
 }
 
+// ClientOption allows customising the client's behaviour during construction
+// with NewClient().
 type ClientOption func(*Client)
 
 // WithAppKey configures an application key to attach to API calls. This can be
@@ -62,6 +67,7 @@ func WithTimeout(timeout time.Duration) ClientOption {
 	}
 }
 
+// NewClient initialises a client to retrieve data from the BikePoint API.
 func NewClient(httpClient *http.Client, opts ...ClientOption) *Client {
 	c := &Client{
 		HTTPClient: httpClient,
@@ -99,7 +105,8 @@ func (c Client) buildRequest() *http.Request {
 }
 
 // FetchStationAvailabilities retrieves the latest cycle and dock availability.
-// The returned list can be assumed to be sorted by station ID.
+// It will back-off exponentially until the passed context expires. The
+// returned list can be assumed to be sorted by station ID.
 func (c *Client) FetchStationAvailabilities(ctx context.Context) ([]StationAvailability, error) {
 	// Can still grow if needed; this saves the first handful of reallocs.
 	stationAvailabilities := make([]StationAvailability, 0, 1024)

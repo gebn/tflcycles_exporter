@@ -19,6 +19,8 @@ var (
 	)
 )
 
+// ScrapeCollector is a prometheus.Collector yielding metrics about the
+// fetching of data from the TfL BikePoint API.
 type ScrapeCollector struct {
 	Success bool
 	time.Duration
