@@ -2,7 +2,10 @@ module github.com/gebn/tflcycles_exporter
 
 go 1.20
 
-require github.com/prometheus/client_golang v1.15.1
+require (
+	github.com/cenkalti/backoff/v4 v4.2.1
+	github.com/prometheus/client_golang v1.15.1
+)
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
