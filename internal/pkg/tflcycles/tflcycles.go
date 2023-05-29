@@ -85,7 +85,7 @@ type (
 )
 
 func (sa *StationAvailability) UnmarshalJSON(b []byte) error {
-	var p place
+	p := place{}
 	if err := json.Unmarshal(b, &p); err != nil {
 		return err
 	}
