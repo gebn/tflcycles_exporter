@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"net/http"
 	"os"
@@ -35,15 +36,21 @@ func main() {
 func app(ctx context.Context) error {
 	buildInfo.WithLabelValues(stamp.Version, stamp.Commit).Set(1)
 
+	version := flag.Bool("version", false, "print the exporter version and exit")
+	listen := flag.String("listen", ":9722", "the address and port to bind the web server to")
+	flag.Parse()
+
+	if *version {
+		fmt.Println(stamp.Summary())
+		return nil
+	}
+
 	exporter := exporter.Exporter{
 		Client: tflcycles.NewClient(http.DefaultClient,
 			tflcycles.WithAppKey(os.Getenv("APP_KEY"))),
 	}
 	http.Handle("/metrics", promhttp.Handler())
 	http.Handle("/stations", exporter)
-	return http.ListenAndServe(":9722", nil)
+	return http.ListenAndServe(*listen, nil)
 
-	// help
-	// version
-	// listen address+port
 }
