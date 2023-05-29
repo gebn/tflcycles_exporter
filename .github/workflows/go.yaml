@@ -1,0 +1,44 @@
+name: Go
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos:
+        - windows
+        - linux
+        - darwin
+        goarch:
+        - amd64
+        - arm64
+        include:
+        - goos: linux
+          goarch: arm
+          goarm: 6
+        - goos: linux
+          goarch: arm
+          goarm: 7
+    env:
+      GOOS: ${{ matrix.goos }}
+      GOARCH: ${{ matrix.goarch }}
+      GOARM: ${{ matrix.goarm }}
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.20.4
+
+    - name: Build
+      run: make dist
+
+    - name: Test
+      run: make test

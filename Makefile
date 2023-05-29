@@ -1,9 +1,8 @@
-OUT := tflcycles_exporter
-
 GOOS := $(shell go env GOOS)
 GOARCH := $(shell go env GOARCH)
 GOARM := $(shell go env GOARM)
 
+OUT := tflcycles_exporter
 VERSION := $(shell ./bin/version)
 
 # Ignore any C/C++ toolchain present.
@@ -31,7 +30,7 @@ LDFLAGS := -ldflags=" \
 -X 'github.com/gebn/go-stamp/v2.Version=$(VERSION)'"
 
 build:
-	go build $(LDFLAGS) -o $(OUT) ./cmd/$(OUT)
+	go build $(LDFLAGS) -o $(OUT) ./cmd/tflcycles_exporter
 
 dist: build
 	mkdir $(ARCHIVE_BASE)
