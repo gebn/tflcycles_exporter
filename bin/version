@@ -3,7 +3,7 @@
 # Decides the version name for a given build.
 
 # If CI says we're building a tag, build that specific tag name.
-if [[ -n $GITHUB_REF_NAME ]]; then
+if [[ $GITHUB_REF == refs/tags/* ]]; then
     echo "$GITHUB_REF_NAME"
     exit 0
 fi
