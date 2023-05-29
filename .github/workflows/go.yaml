@@ -40,6 +40,9 @@ jobs:
     - name: Build
       run: make dist
 
+    - name: Test
+      run: make test
+
     - id: vars
       run: echo "distpath=$(make distpath)" >> $GITHUB_OUTPUT
 
@@ -54,10 +57,3 @@ jobs:
       with:
         name: ${{ steps.vars.outputs.distpath }}.sha256
         path: ${{ steps.vars.outputs.distpath }}.sha256
-
-  test:
-    runs-on: ubuntu-latest
-    # Only runs on linux/amd64 while GitHub does not support YAML anchors.
-    steps:
-    - name: Test
-      run: make test
