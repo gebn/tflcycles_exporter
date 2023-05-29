@@ -99,9 +99,6 @@ func (c Client) buildRequest() *http.Request {
 		panic(err)
 	}
 
-	// Otherwise we may receive data up to 30s old.
-	req.Header.Set("cache-control", "no-cache")
-
 	// TfL blocks the default "Go-http-client/1.1" user agent.
 	req.Header.Set("user-agent", "tflcycles_exporter/"+stamp.Version)
 
