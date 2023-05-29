@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"time"
 
@@ -14,6 +13,7 @@ import (
 	"github.com/gebn/go-stamp/v2"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
+	"go.uber.org/zap"
 )
 
 var (
@@ -40,6 +40,9 @@ var (
 // have to decode the JSON and then delete bits from the output. This is left
 // to the user of the client.
 type Client struct {
+
+	// Logger will be used to record failed fetch attempts.
+	Logger *zap.Logger
 
 	// HTTPClient is the client used to make requests to the API. This must be
 	// provided when calling NewClient().
@@ -79,8 +82,9 @@ func WithTimeout(timeout time.Duration) ClientOption {
 }
 
 // NewClient initialises a client to retrieve data from the BikePoint API.
-func NewClient(httpClient *http.Client, opts ...ClientOption) *Client {
+func NewClient(logger *zap.Logger, httpClient *http.Client, opts ...ClientOption) *Client {
 	c := &Client{
+		Logger:     logger,
 		HTTPClient: httpClient,
 		Timeout:    3 * time.Second,
 	}
@@ -157,7 +161,7 @@ func (c *Client) FetchStationAvailabilities(ctx context.Context) ([]StationAvail
 		// No need to use backoff.WithContext() here as well.
 		backoff.NewExponentialBackOff(),
 		func(err error, _ time.Duration) {
-			log.Printf("failed attempt: %v", err)
+			c.Logger.Warn("failed attempt", zap.Error(err))
 			httpRequestRetries.Inc()
 		},
 	)
