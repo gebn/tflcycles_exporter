@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy: &strategy
+    strategy:
       matrix:
         goos:
         - windows
@@ -57,7 +57,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    strategy: *strategy
+    # Only runs on linux/amd64 while GitHub does not support YAML anchors.
     steps:
     - name: Test
       run: make test
