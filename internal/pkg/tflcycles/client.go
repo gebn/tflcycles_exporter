@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
+	"github.com/gebn/go-stamp/v2"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 )
@@ -86,7 +87,6 @@ func NewClient(httpClient *http.Client, opts ...ClientOption) *Client {
 	for _, opt := range opts {
 		opt(c)
 	}
-
 	c.req = c.buildRequest()
 	return c
 }
@@ -103,7 +103,7 @@ func (c Client) buildRequest() *http.Request {
 	req.Header.Set("cache-control", "no-cache")
 
 	// TfL blocks the default "Go-http-client/1.1" user agent.
-	req.Header.Set("user-agent", "tflcycles_exporter/v0.0.1") // TODO Use actual version.
+	req.Header.Set("user-agent", "tflcycles_exporter/"+stamp.Version)
 
 	if c.AppKey != "" {
 		q := req.URL.Query()
