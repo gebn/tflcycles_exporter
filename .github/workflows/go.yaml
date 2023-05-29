@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
+    strategy: &strategy
       matrix:
         goos:
         - windows
@@ -40,5 +40,24 @@ jobs:
     - name: Build
       run: make dist
 
+    - id: vars
+      run: echo "distpath=$(make distpath)" >> $GITHUB_OUTPUT
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ${{ steps.vars.outputs.distpath }}
+        path: ${{ steps.vars.outputs.distpath }}
+
+    - run: sha256sum ${{ steps.vars.outputs.distpath }} > ${{ steps.vars.outputs.distpath }}.sha256
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ${{ steps.vars.outputs.distpath }}.sha256
+        path: ${{ steps.vars.outputs.distpath }}.sha256
+
+  test:
+    runs-on: ubuntu-latest
+    strategy: *strategy
+    steps:
     - name: Test
       run: make test
