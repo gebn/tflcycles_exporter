@@ -46,7 +46,8 @@ func (e Exporter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fetchFailures.Inc()
 		log.Printf("failed to fetch station availabilities: %v", err)
-		// stationAvailabilities will be nil.
+		// Force to nil, even if we received a non-nil slice.
+		stationAvailabilities = nil
 	}
 
 	reg := prometheus.NewRegistry()
