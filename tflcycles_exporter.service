@@ -1,0 +1,14 @@
+[Unit]
+Description=TfL Cycles Exporter
+Documentation=https://github.com/gebn/tflcycles_exporter/blob/main/README.md
+After=network.target
+
+[Service]
+User=tflcycles_exporter
+#Environment=APP_KEY=<changeme>
+WorkingDirectory=/opt/tflcycles_exporter
+ExecStart=/opt/tflcycles_exporter/tflcycles_exporter
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
