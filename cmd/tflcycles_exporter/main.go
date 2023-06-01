@@ -66,15 +66,13 @@ func app(ctx context.Context) error {
 	// This handler is also responsible for serving 404s.
 	http.Handle("/", indexHandler)
 
-	http.Handle(
-		"/metrics",
-		promhttp.HandlerFor(
-			prometheus.DefaultGatherer,
-			promutil.HandlerOptsWithLogger(logger),
-		),
+	metricsHandler := promhttp.HandlerFor(
+		prometheus.DefaultGatherer,
+		promutil.HandlerOptsWithLogger(logger),
 	)
+	http.Handle("/metrics", metricsHandler)
 
-	exporter := exporter.NewExporter(
+	stationsHandler := exporter.NewExporter(
 		logger,
 		tflcycles.NewClient(
 			logger,
@@ -82,7 +80,7 @@ func app(ctx context.Context) error {
 			tflcycles.WithAppKey(os.Getenv("APP_KEY")),
 		),
 	)
-	http.Handle("/stations", exporter)
+	http.Handle("/stations", stationsHandler)
 
 	return listenAndServe(ctx, logger, *listenAddr)
 }
