@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <title>TfL Cycles Exporter</title>
+        <style>
+            pre {
+                white-space: pre-wrap;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>TfL Cycles Exporter</h1>
+        <ul>
+            <li><a href="https://github.com/gebn/tflcycles_exporter">Repository</a></li>
+            <li><a href="/metrics">Metrics</a></li>
+        </ul>
+        <form action="/stations">
+            <input type="submit" value="Scrape"/>
+        </form>
+        <pre>{{ .Stamp }}</pre>
+    </body>
+</html>

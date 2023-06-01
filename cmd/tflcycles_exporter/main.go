@@ -59,6 +59,13 @@ func app(ctx context.Context) error {
 		return err
 	}
 
+	indexHandler, err := buildIndexHandler(logger)
+	if err != nil {
+		return err
+	}
+	// This handler is also responsible for serving 404s.
+	http.Handle("/", indexHandler)
+
 	http.Handle(
 		"/metrics",
 		promhttp.HandlerFor(
