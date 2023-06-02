@@ -51,9 +51,9 @@ type Availability struct {
 	// returned. It is taken from the `NbEmptyDocks` property.
 	Docks int
 
-	// Bikes is the number of in-service, non-electric bikes available for
+	// Bicycles is the number of in-service, non-electric bikes available for
 	// hire. It is taken from the `NbStandardBikes` property.
-	Bikes int
+	Bicycles int
 
 	// EBikes is the number of in-service, electric bikes available for hire.
 	// It is taken from the `NbEBikes` property.
@@ -107,7 +107,7 @@ func (sa *StationAvailability) UnmarshalJSON(b []byte) error {
 		case "NbEmptyDocks":
 			sa.Availability.Docks = i
 		case "NbStandardBikes":
-			sa.Availability.Bikes = i
+			sa.Availability.Bicycles = i
 		case "NbEBikes":
 			sa.Availability.EBikes = i
 		}

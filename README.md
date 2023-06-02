@@ -13,9 +13,9 @@ At the time of writing, there are over 700 docking stations.
 The exporter will expose 4 time series for each one:
 
 ```
-# HELP tflcycles_bikes_available The number of in-service, conventional bikes available for hire.
-# TYPE tflcycles_bikes_available gauge
-tflcycles_bikes_available{station="Stonecutter Street, Holborn"} 2
+# HELP tflcycles_bicycles_available The number of in-service, conventional bikes available for hire.
+# TYPE tflcycles_bicycles_available gauge
+tflcycles_bicycles_available{station="Stonecutter Street, Holborn"} 2
 ...
 # HELP tflcycles_docks The total number of docks at the station, including those that are out of service.
 # TYPE tflcycles_docks gauge
