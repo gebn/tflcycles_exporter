@@ -2,6 +2,7 @@ package tflcycles
 
 import (
 	"encoding/json"
+	"regexp"
 	"strconv"
 )
 
@@ -19,6 +20,8 @@ var (
 	// additionalProperties. It is populated once from relevantProperties on
 	// package load.
 	relevantPropertiesLookup map[string]struct{}
+
+	whitespaceBeforeComma = regexp.MustCompile(`\s+,`)
 )
 
 func init() {
@@ -86,13 +89,20 @@ type (
 	}
 )
 
+// normaliseCommonName removes whitespace before the comma in bike point names.
+// 39 stations currently have one space before the comma, and 1 has two
+// ("Kennington Road  , Vauxhall").
+func normaliseCommonName(commonName string) string {
+	return whitespaceBeforeComma.ReplaceAllString(commonName, ",")
+}
+
 func (sa *StationAvailability) UnmarshalJSON(b []byte) error {
 	p := place{}
 	if err := json.Unmarshal(b, &p); err != nil {
 		return err
 	}
 
-	sa.Station.Name = p.CommonName
+	sa.Station.Name = normaliseCommonName(p.CommonName)
 
 	for _, ap := range p.AdditionalProperties {
 		if _, ok := relevantPropertiesLookup[ap.Key]; !ok {
