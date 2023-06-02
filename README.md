@@ -1,7 +1,7 @@
 # TfL Cycles Exporter
 
 [![CI](https://github.com/gebn/tflcycles_exporter/actions/workflows/ci.yaml/badge.svg)](https://github.com/gebn/tflcycles_exporter/actions/workflows/ci.yaml)
-[![Docker Hub](https://img.shields.io/docker/pulls/gebn/tflcycles_exporter.svg)](https://hub.docker.com/r/gebn/tflcycles_exporter)
+[![Docker Hub](https://img.shields.io/docker/pulls/gebn/tflcycles_exporter.svg)](https://hub.docker.com/r/gebn/tflcycles_exporter/tags)
 
 Prometheus exporter for Transport for London cycle hire availability data.
 
@@ -84,7 +84,7 @@ The following steps will be suitable for the majority of Linux users.
 Images are published to [Docker Hub][] each push.
 In a Kubernetes context, `/` is efficient to produce, so is suitable for liveness and readiness probes.
 
-[Docker Hub]: https://hub.docker.com/r/gebn/tflcycles_exporter
+[Docker Hub]: https://hub.docker.com/r/gebn/tflcycles_exporter/tags
 
 ## Prometheus
 
