@@ -28,15 +28,17 @@ func init() {
 	}
 }
 
-// Station contains relatively-stable metadata about a docking station.
+// Station contains relatively-stable metadata about a docking point.
 type Station struct {
-	// Name is the human-readable location of the station, e.g. "Stonecutter
-	// Street, Holborn". It is taken from the `commonName` field of the JSON.
+
+	// Name is the human-readable location of the docking point, e.g.
+	// "Stonecutter Street, Holborn". It is taken from the `commonName` field
+	// of the JSON.
 	Name string
 
-	// Docks indicates the total number of docks at the station, including
-	// those out of service. It is taken from the `NbDocks` property of the
-	// JSON.
+	// Docks indicates the total number of docks at the docking point,
+	// including those out of service. It is taken from the `NbDocks` property
+	// of the JSON.
 	Docks int
 }
 
