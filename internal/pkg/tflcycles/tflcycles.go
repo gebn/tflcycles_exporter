@@ -109,19 +109,19 @@ func (sa *StationAvailability) UnmarshalJSON(b []byte) error {
 			continue
 		}
 		// All relevantProperties are ints.
-		i, err := strconv.Atoi(ap.Value)
+		v, err := strconv.Atoi(ap.Value)
 		if err != nil {
 			return err
 		}
 		switch ap.Key {
 		case "NbDocks":
-			sa.Station.Docks = i
+			sa.Station.Docks = v
 		case "NbEmptyDocks":
-			sa.Availability.Docks = i
+			sa.Availability.Docks = v
 		case "NbStandardBikes":
-			sa.Availability.Bicycles = i
+			sa.Availability.Bicycles = v
 		case "NbEBikes":
-			sa.Availability.EBikes = i
+			sa.Availability.EBikes = v
 		}
 	}
 	return nil
