@@ -95,10 +95,6 @@ Each request to this endpoint will trigger a request to the BikePoint API and re
 The source data is updated at most once per minute, so the scrape interval should not be below `1m`.
 Setting it below this will still work, however it will needlessly re-retrieve the same values from TfL's API, and use up your request limit unnecessarily.
 
-If Prometheus is deployed with multiple replicas, and you plan to colocate an exporter instance next to each one, the `/metrics` job should _not_ be deduplicated, as these are separate processes.
-You may need to use the fully-qualified name rather than `localhost` to ensure distinct label sets.
-The `/stations` job can be deduplicated safely, as all exporters should return the same thing within a given minute.
-
 ```yaml
 scrape_configs:
 
@@ -114,3 +110,7 @@ scrape_configs:
   - targets:
     - localhost:9722
 ```
+
+If Prometheus is deployed with multiple replicas, and you plan to colocate an exporter instance next to each one, the `/metrics` job should _not_ be deduplicated, as these are separate processes.
+You may need to use a hostname other than `localhost` to ensure distinct label sets.
+The `/stations` job can be deduplicated safely, as all exporters should return the same thing within a given minute.
