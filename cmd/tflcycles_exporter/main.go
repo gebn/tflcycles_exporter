@@ -5,6 +5,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"log/slog"
 	"net"
 	"net/http"
 	_ "net/http/pprof"
@@ -21,7 +22,6 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"go.uber.org/zap"
 )
 
 var (
@@ -54,10 +54,8 @@ func app(ctx context.Context) error {
 		return nil
 	}
 
-	logger, err := buildLogger(*isDebug)
-	if err != nil {
-		return err
-	}
+	logger := buildLogger(*isDebug)
+	slog.SetDefault(logger)
 
 	indexHandler, err := buildIndexHandler(logger)
 	if err != nil {
@@ -85,29 +83,31 @@ func app(ctx context.Context) error {
 	return listenAndServe(ctx, logger, *listenAddr)
 }
 
-// buildLogger creates a suitable Zap logger for the provided mode. If
-// debugging is disabled, which will typically be the case, the logger is
-// suitable for production: JSON format, Unix timestamps, info level. If
-// debugging is enabled, we instead log for direct human interpretation, in the
-// local time zone, at debug level.
+// buildLogger creates a suitable logger for the provided mode. If debugging is
+// disabled, which will typically be the case, the logger is suitable for
+// production: JSON format, info level. If debugging is enabled, we instead log
+// for direct human interpretation, at debug level.
 //
 // Note the parameter to this function is not simply a log level, as it also
-// infliences the format.
-func buildLogger(isDebug bool) (*zap.Logger, error) {
+// influences the format.
+func buildLogger(isDebug bool) *slog.Logger {
 	if isDebug {
-		return zap.NewDevelopment()
+		// Uses the logfmt standard.
+		return slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{
+			Level: slog.LevelDebug,
+		}))
 	}
-	return zap.NewProduction()
+	return slog.New(slog.NewJSONHandler(os.Stderr, nil))
 }
 
-func listenAndServe(ctx context.Context, logger *zap.Logger, addr string) error {
+func listenAndServe(ctx context.Context, logger *slog.Logger, addr string) error {
 	listenConfig := net.ListenConfig{}
 	listener, err := listenConfig.Listen(ctx, "tcp", addr)
 	if err != nil {
 		return err
 	}
 	defer listener.Close()
-	logger.Info("listening", zap.String("addr", listener.Addr().String()))
+	logger.InfoContext(ctx, "listening", slog.String("addr", listener.Addr().String()))
 
 	server := http.Server{
 		ReadHeaderTimeout: time.Second,
@@ -120,7 +120,7 @@ func listenAndServe(ctx context.Context, logger *zap.Logger, addr string) error 
 		sig := make(chan os.Signal, 1)
 		signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
 		<-sig
-		logger.Info("waiting for open connections to become idle")
+		logger.InfoContext(ctx, "waiting for open connections to become idle")
 		shutdown <- server.Shutdown(ctx)
 	}()
 

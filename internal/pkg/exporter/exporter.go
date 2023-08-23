@@ -3,6 +3,7 @@
 package exporter
 
 import (
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -12,7 +13,6 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"go.uber.org/zap"
 )
 
 var (
@@ -30,13 +30,13 @@ var (
 // with information about stations' dock and cycle availability. Create
 // instances with NewExporter().
 type Exporter struct {
-	Logger *zap.Logger
+	Logger *slog.Logger
 	Client *tflcycles.Client
 
 	handlerOpts promhttp.HandlerOpts
 }
 
-func NewExporter(logger *zap.Logger, client *tflcycles.Client) *Exporter {
+func NewExporter(logger *slog.Logger, client *tflcycles.Client) *Exporter {
 	return &Exporter{
 		Logger:      logger,
 		Client:      client,
@@ -53,7 +53,8 @@ func (e Exporter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fetchDuration.Observe(elapsed.Seconds())
 	if err != nil {
 		fetchFailures.Inc()
-		e.Logger.Error("failed to fetch station availabilities", zap.Error(err))
+		e.Logger.ErrorContext(ctx, "failed to fetch station availabilities",
+			slog.String("error", err.Error()))
 		// Force to nil, even if we received a non-nil slice.
 		stationAvailabilities = nil
 	}

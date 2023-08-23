@@ -4,10 +4,10 @@ import (
 	"bytes"
 	_ "embed"
 	"html/template"
+	"log/slog"
 	"net/http"
 
 	"github.com/gebn/go-stamp/v2"
-	"go.uber.org/zap"
 )
 
 var (
@@ -35,20 +35,24 @@ func renderIndex() ([]byte, error) {
 // buildIndexHandler returns an http.Handler implementation that writes the
 // landing page for the exporter. This page is efficient to produce, so can be
 // used for health checking the process.
-func buildIndexHandler(logger *zap.Logger) (http.Handler, error) {
+func buildIndexHandler(logger *slog.Logger) (http.Handler, error) {
 	response, err := renderIndex()
 	if err != nil {
 		return nil, err
 	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+
 		// Go's mux will route any unregistered path to the / handler, so we
 		// must explicitly check for 404s here.
 		if r.URL.Path != "/" {
 			http.NotFound(w, r)
 			return
 		}
+
 		if _, err := w.Write(response); err != nil {
-			logger.Error("failed to write response", zap.Error(err))
+			logger.ErrorContext(ctx, "failed to write response",
+				slog.String("error", err.Error()))
 		}
 	}), nil
 }

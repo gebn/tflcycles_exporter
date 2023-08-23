@@ -6,7 +6,6 @@ require (
 	github.com/cenkalti/backoff/v4 v4.2.1
 	github.com/gebn/go-stamp/v2 v2.2.1
 	github.com/prometheus/client_golang v1.16.0
-	go.uber.org/zap v1.25.0
 )
 
 require (
@@ -17,7 +16,6 @@ require (
 	github.com/prometheus/client_model v0.4.0 // indirect
 	github.com/prometheus/common v0.44.0 // indirect
 	github.com/prometheus/procfs v0.11.1 // indirect
-	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/sys v0.11.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 )
