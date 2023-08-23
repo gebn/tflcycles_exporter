@@ -18,7 +18,7 @@ import (
 var (
 	fetchDuration = promauto.NewHistogram(prometheus.HistogramOpts{
 		Name: "tflcycles_exporter_fetch_duration_seconds",
-		Help: "Observes the end-to-end duration of fetch operations.",
+		Help: "Observes the end-to-end time taken to retrieve station availabilities.",
 	})
 	fetchFailures = promauto.NewCounter(prometheus.CounterOpts{
 		Name: "tflcycles_exporter_fetch_failures_total",
