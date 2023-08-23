@@ -82,7 +82,7 @@ The following steps will be suitable for the majority of Linux users.
 ## Container
 
 Images are published to [Docker Hub][] each push.
-In a Kubernetes context, `/` is efficient to produce, so is suitable for liveness and readiness probes.
+In a Kubernetes context, the `/` endpoint is efficient to serve, so is suitable for liveness and readiness probes.
 
 [Docker Hub]: https://hub.docker.com/r/gebn/tflcycles_exporter/tags
 
