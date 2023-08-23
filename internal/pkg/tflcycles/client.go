@@ -163,6 +163,9 @@ func (c *Client) FetchStationAvailabilities(ctx context.Context) ([]StationAvail
 		func(err error, wait time.Duration) {
 			c.Logger.WarnContext(ctx, "failed attempt",
 				slog.String("error", err.Error()),
+				// This may not be relevant to the error above, but typically
+				// it is.
+				slog.Duration("timeout", c.Timeout),
 				slog.Duration("wait", wait))
 			httpRequestRetries.Inc()
 		},
