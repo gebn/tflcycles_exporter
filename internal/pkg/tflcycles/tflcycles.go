@@ -20,8 +20,6 @@ var (
 	// additionalProperties. It is populated once from relevantProperties on
 	// package load.
 	relevantPropertiesLookup map[string]struct{}
-
-	whitespaceBeforeComma = regexp.MustCompile(`\s+,`)
 )
 
 func init() {
@@ -87,6 +85,10 @@ type (
 		// API may miss if a bike was rented and returned within the same time
 		// interval and not update the timestamp.
 	}
+)
+
+var (
+	whitespaceBeforeComma = regexp.MustCompile(`\s+,`)
 )
 
 // normaliseCommonName removes whitespace before the comma in bike point names.
