@@ -160,8 +160,10 @@ func (c *Client) FetchStationAvailabilities(ctx context.Context) ([]StationAvail
 		},
 		// No need to use backoff.WithContext() here as well.
 		backoff.NewExponentialBackOff(),
-		func(err error, _ time.Duration) {
-			c.Logger.WarnContext(ctx, "failed attempt", slog.String("error", err.Error()))
+		func(err error, wait time.Duration) {
+			c.Logger.WarnContext(ctx, "failed attempt",
+				slog.String("error", err.Error()),
+				slog.Duration("wait", wait))
 			httpRequestRetries.Inc()
 		},
 	)
