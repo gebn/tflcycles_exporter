@@ -7,21 +7,21 @@ import (
 )
 
 var (
-	// setters provides an efficient way to take a given additionalProperty in
-	// the response and set the corresponding field on a StationAvailability
-	// struct.
-	setters = map[string]func(*StationAvailability, int){
-		"NbEmptyDocks": func(sa *StationAvailability, v int) {
-			sa.Availability.Docks = v
+	// propertyMappings provides an efficient way to take a given
+	// additionalProperty in the response and find the corresponding field on a
+	// StationAvailability struct to set with its value.
+	propertyMappings = map[string]func(*StationAvailability) *int{
+		"NbEmptyDocks": func(sa *StationAvailability) *int {
+			return &sa.Availability.Docks
 		},
-		"NbDocks": func(sa *StationAvailability, v int) {
-			sa.Station.Docks = v
+		"NbDocks": func(sa *StationAvailability) *int {
+			return &sa.Station.Docks
 		},
-		"NbStandardBikes": func(sa *StationAvailability, v int) {
-			sa.Availability.Bicycles = v
+		"NbStandardBikes": func(sa *StationAvailability) *int {
+			return &sa.Availability.Bicycles
 		},
-		"NbEBikes": func(sa *StationAvailability, v int) {
-			sa.Availability.EBikes = v
+		"NbEBikes": func(sa *StationAvailability) *int {
+			return &sa.Availability.EBikes
 		},
 	}
 )
@@ -104,15 +104,17 @@ func (sa *StationAvailability) UnmarshalJSON(b []byte) error {
 	sa.Station.Name = normaliseCommonName(p.CommonName)
 
 	for _, ap := range p.AdditionalProperties {
-		setter, ok := setters[ap.Key]
+		mapping, ok := propertyMappings[ap.Key]
 		if !ok {
 			continue
 		}
+		field := mapping(sa)
+
 		value, err := strconv.Atoi(ap.Value)
 		if err != nil {
 			return err
 		}
-		setter(sa, value)
+		*field = value
 	}
 	return nil
 }
