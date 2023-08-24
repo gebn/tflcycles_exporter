@@ -11,12 +11,16 @@ import (
 )
 
 func TestRenderIndex(t *testing.T) {
+	t.Parallel()
+
 	if _, err := renderIndex(); err != nil {
 		t.Fatal(err)
 	}
 }
 
 func TestBuildIndexHandler_NotFound(t *testing.T) {
+	t.Parallel()
+
 	handler, err := buildIndexHandler(slog.Default())
 	if _, err := renderIndex(); err != nil {
 		t.Fatal(err)
@@ -36,6 +40,8 @@ func TestBuildIndexHandler_NotFound(t *testing.T) {
 }
 
 func TestBuildIndexHandler_Root(t *testing.T) {
+	t.Parallel()
+
 	handler, err := buildIndexHandler(slog.Default())
 	if _, err := renderIndex(); err != nil {
 		t.Fatal(err)
