@@ -34,7 +34,9 @@ func (ScrapeCollector) Describe(d chan<- *prometheus.Desc) {
 func (c ScrapeCollector) Collect(m chan<- prometheus.Metric) {
 	m <- prometheus.MustNewConstMetric(
 		up,
-		prometheus.GaugeValue,
+		// CollectAndCompare() seems to recognise the _up suffix and insists it
+		// is untyped.
+		prometheus.UntypedValue,
 		boolToFloat64(c.Success),
 	)
 	m <- prometheus.MustNewConstMetric(
