@@ -7,27 +7,24 @@ import (
 )
 
 var (
-	// relevantProperties holds numeric additionalProperties we care about for
-	// decoding.
-	relevantProperties = []string{
-		"NbEmptyDocks",
-		"NbDocks",
-		"NbStandardBikes",
-		"NbEBikes",
+	// setters provides an efficient way to take a given additionalProperty in
+	// the response and set the corresponding field on a StationAvailability
+	// struct.
+	setters = map[string]func(*StationAvailability, int){
+		"NbEmptyDocks": func(sa *StationAvailability, v int) {
+			sa.Availability.Docks = v
+		},
+		"NbDocks": func(sa *StationAvailability, v int) {
+			sa.Station.Docks = v
+		},
+		"NbStandardBikes": func(sa *StationAvailability, v int) {
+			sa.Availability.Bicycles = v
+		},
+		"NbEBikes": func(sa *StationAvailability, v int) {
+			sa.Availability.EBikes = v
+		},
 	}
-
-	// relevantPropertiesLookup is used to quickly identify
-	// additionalProperties. It is populated once from relevantProperties on
-	// package load.
-	relevantPropertiesLookup map[string]struct{}
 )
-
-func init() {
-	relevantPropertiesLookup = make(map[string]struct{}, len(relevantProperties))
-	for _, p := range relevantProperties {
-		relevantPropertiesLookup[p] = struct{}{}
-	}
-}
 
 // Station contains relatively-stable metadata about a docking point.
 type Station struct {
@@ -107,24 +104,15 @@ func (sa *StationAvailability) UnmarshalJSON(b []byte) error {
 	sa.Station.Name = normaliseCommonName(p.CommonName)
 
 	for _, ap := range p.AdditionalProperties {
-		if _, ok := relevantPropertiesLookup[ap.Key]; !ok {
+		setter, ok := setters[ap.Key]
+		if !ok {
 			continue
 		}
-		// All relevantProperties are ints.
-		v, err := strconv.Atoi(ap.Value)
+		value, err := strconv.Atoi(ap.Value)
 		if err != nil {
 			return err
 		}
-		switch ap.Key {
-		case "NbDocks":
-			sa.Station.Docks = v
-		case "NbEmptyDocks":
-			sa.Availability.Docks = v
-		case "NbStandardBikes":
-			sa.Availability.Bicycles = v
-		case "NbEBikes":
-			sa.Availability.EBikes = v
-		}
+		setter(sa, value)
 	}
 	return nil
 }
