@@ -22,7 +22,7 @@ func TestBuildIndexHandler_NotFound(t *testing.T) {
 	t.Parallel()
 
 	handler, err := buildIndexHandler(slog.Default())
-	if _, err := renderIndex(); err != nil {
+	if err != nil {
 		t.Fatal(err)
 	}
 
@@ -43,7 +43,7 @@ func TestBuildIndexHandler_Root(t *testing.T) {
 	t.Parallel()
 
 	handler, err := buildIndexHandler(slog.Default())
-	if _, err := renderIndex(); err != nil {
+	if err != nil {
 		t.Fatal(err)
 	}
 
