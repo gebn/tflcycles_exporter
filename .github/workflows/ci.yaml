@@ -34,20 +34,21 @@ jobs:
         go-version: 1.21.0
 
     - name: Run Staticcheck
+      if: env.GOOS == 'linux' && env.GOARCH == 'amd64'
       uses: dominikh/staticcheck-action@v1.3.0
       # No point in running for each OS and architecture.
-      if: env.GOOS == 'linux' && env.GOARCH == 'amd64'
       with:
         version: 2023.1.5
         install-go: false
 
-    - name: Build
-      run: make dist
-
     - name: Test
+      if: env.GOOS == 'linux' && env.GOARCH == 'amd64'
       run: |
         make test
         python3 -m unittest
+
+    - name: Build
+      run: make dist
 
     - id: vars
       run: echo "distpath=$(make distpath)" >> $GITHUB_OUTPUT
