@@ -2,9 +2,34 @@ name: CI
 
 on: push
 
+env:
+  GO_VERSION: 1.21.0
+
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: ${{ env.GO_VERSION }}
+
+    - name: Run Staticcheck
+      uses: dominikh/staticcheck-action@v1.3.0
+      with:
+        version: 2023.1.5
+        install-go: false
+
+    - name: Test
+      run: |
+        make test
+        python3 -m unittest
+
   build:
     runs-on: ubuntu-latest
+    needs: [test]
     strategy:
       matrix:
         goos:
@@ -31,21 +56,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
-        go-version: 1.21.0
-
-    - name: Run Staticcheck
-      if: env.GOOS == 'linux' && env.GOARCH == 'amd64'
-      uses: dominikh/staticcheck-action@v1.3.0
-      # No point in running for each OS and architecture.
-      with:
-        version: 2023.1.5
-        install-go: false
-
-    - name: Test
-      if: env.GOOS == 'linux' && env.GOARCH == 'amd64'
-      run: |
-        make test
-        python3 -m unittest
+        go-version: ${{ env.GO_VERSION }}
 
     - name: Build
       run: make dist
