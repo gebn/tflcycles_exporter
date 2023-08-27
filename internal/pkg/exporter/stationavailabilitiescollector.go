@@ -25,7 +25,7 @@ var (
 		[]string{"station"},
 		nil,
 	)
-	ebikesAvailable = prometheus.NewDesc(
+	eBikesAvailable = prometheus.NewDesc(
 		"tflcycles_ebikes_available",
 		"The number of in-service e-bikes available for hire.",
 		[]string{"station"},
@@ -43,7 +43,7 @@ func (StationAvailabilitiesCollector) Describe(d chan<- *prometheus.Desc) {
 	d <- docks
 	d <- docksAvailable
 	d <- bicyclesAvailable
-	d <- ebikesAvailable
+	d <- eBikesAvailable
 }
 
 func (c StationAvailabilitiesCollector) Collect(m chan<- prometheus.Metric) {
@@ -67,7 +67,7 @@ func (c StationAvailabilitiesCollector) Collect(m chan<- prometheus.Metric) {
 			stationAvailability.Station.Name,
 		)
 		m <- prometheus.MustNewConstMetric(
-			ebikesAvailable,
+			eBikesAvailable,
 			prometheus.GaugeValue,
 			float64(stationAvailability.Availability.EBikes),
 			stationAvailability.Station.Name,
