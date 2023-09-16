@@ -20,8 +20,9 @@ var (
 	// This will observe a shorter value if a given request is terminated early
 	// due to timeout.
 	httpRequestDuration = promauto.NewHistogram(prometheus.HistogramOpts{
-		Name: "tflcycles_client_http_request_duration_seconds",
-		Help: "Observes the duration of all requests to /BikePoint, including response parsing.",
+		Name:    "tflcycles_client_http_request_duration_seconds",
+		Help:    "Observes the duration of all requests to /BikePoint, including response parsing.",
+		Buckets: prometheus.ExponentialBuckets(.25, 1.4, 10), // 4.13
 	})
 	httpRequestRetries = promauto.NewCounter(prometheus.CounterOpts{
 		Name: "tflcycles_client_http_request_retries_total",
