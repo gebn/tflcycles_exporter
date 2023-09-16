@@ -87,7 +87,7 @@ func NewClient(logger *slog.Logger, httpClient *http.Client, opts ...ClientOptio
 	c := &Client{
 		Logger:     logger,
 		HTTPClient: httpClient,
-		Timeout:    3 * time.Second,
+		Timeout:    4 * time.Second,
 	}
 	for _, opt := range opts {
 		opt(c)
