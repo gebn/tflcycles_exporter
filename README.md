@@ -37,9 +37,9 @@ Download the [latest][] release for your platform, extract, and invoke:
 [latest]: https://github.com/gebn/tflcycles_exporter/releases/latest
 
 ```
-$ curl -LO https://github.com/gebn/tflcycles_exporter/releases/download/v1.0.0/tflcycles_exporter-1.0.0.linux-amd64.tar.gz
-$ tar xf tflcycles_exporter-1.0.0.linux-amd64.tar.gz
-$ cd tflcycles_exporter-1.0.0.linux-amd64
+$ curl -LO https://github.com/gebn/tflcycles_exporter/releases/download/v1.1.0/tflcycles_exporter-1.1.0.linux-amd64.tar.gz
+$ tar xf tflcycles_exporter-1.1.0.linux-amd64.tar.gz
+$ cd tflcycles_exporter-1.1.0.linux-amd64
 $ ./tflcycles_exporter
 ```
 
