@@ -22,7 +22,7 @@ var (
 	httpRequestDuration = promauto.NewHistogram(prometheus.HistogramOpts{
 		Name:    "tflcycles_client_http_request_duration_seconds",
 		Help:    "Observes the duration of all requests to /BikePoint, including response parsing.",
-		Buckets: prometheus.ExponentialBuckets(.25, 1.4, 10), // 4.13
+		Buckets: prometheus.ExponentialBuckets(.25, 1.35, 10), // 3.72
 	})
 	httpRequestRetries = promauto.NewCounter(prometheus.CounterOpts{
 		Name: "tflcycles_client_http_request_retries_total",
@@ -87,7 +87,7 @@ func NewClient(logger *slog.Logger, httpClient *http.Client, opts ...ClientOptio
 	c := &Client{
 		Logger:     logger,
 		HTTPClient: httpClient,
-		Timeout:    4 * time.Second,
+		Timeout:    3 * time.Second,
 	}
 	for _, opt := range opts {
 		opt(c)
