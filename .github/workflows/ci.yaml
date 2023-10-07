@@ -3,7 +3,7 @@ name: CI
 on: push
 
 env:
-  GO_VERSION: 1.21.1
+  GO_VERSION: 1.21.2
 
 jobs:
   test:
@@ -86,10 +86,12 @@ jobs:
       with:
         path: artifacts
 
+    # Ignore Windows and checksums.
     - run: |
         mkdir dist
         mv artifacts/*/*.linux-*.tar.gz dist/
 
+    # We are not fussy about the Python version.
     - run: python3 bin/artifact_docker_reorg.py docker/ dist/
 
     - uses: docker/setup-buildx-action@v3
