@@ -20,9 +20,12 @@ var (
 	// This will observe a shorter value if a given request is terminated early
 	// due to timeout.
 	httpRequestDuration = promauto.NewHistogram(prometheus.HistogramOpts{
-		Name:    "tflcycles_client_http_request_duration_seconds",
-		Help:    "Observes the duration of all requests to /BikePoint, including response parsing.",
-		Buckets: prometheus.ExponentialBuckets(.25, 1.35, 10), // 3.72
+		Name: "tflcycles_client_http_request_duration_seconds",
+		Help: "Observes the duration of all requests to /BikePoint, including response parsing.",
+		// The last bucket should be just above our timeout. 52% of API calls
+		// take more than 615ms, so we weight this quite high in an effort to
+		// reasonably capture the p99.
+		Buckets: prometheus.ExponentialBuckets(.5, 1.223, 10), // 3.06
 	})
 	httpRequestRetries = promauto.NewCounter(prometheus.CounterOpts{
 		Name: "tflcycles_client_http_request_retries_total",
