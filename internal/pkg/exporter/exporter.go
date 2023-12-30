@@ -19,6 +19,9 @@ var (
 	fetchDuration = promauto.NewHistogram(prometheus.HistogramOpts{
 		Name: "tflcycles_exporter_fetch_duration_seconds",
 		Help: "Observes the end-to-end time taken to retrieve station availabilities.",
+		// These are copied from the tflcycles client histogram, because in
+		// practice, that's the latency of the end-to-end scrape.
+		Buckets: prometheus.ExponentialBuckets(.5, 1.223, 10), // 3.06
 	})
 	fetchFailures = promauto.NewCounter(prometheus.CounterOpts{
 		Name: "tflcycles_exporter_fetch_failures_total",
