@@ -8,8 +8,6 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
-	"net/url"
-	"strings"
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
@@ -58,9 +56,9 @@ type Client struct {
 	// WithTimeout().
 	Timeout time.Duration
 
-	// AppKey is the TfL Unified API application key to attach to requests. If
-	// empty, anonymous access will be used. This can be configured using
-	// WithAppKey().
+	// AppKey is the TfL Unified API application key to attach to requests in
+	// the `app_key` header. If empty, anonymous access will be used. This can
+	// be configured using WithAppKey().
 	AppKey string
 
 	req *http.Request
@@ -113,9 +111,9 @@ func (c Client) buildRequest() *http.Request {
 	req.Header.Set("user-agent", "tflcycles_exporter/"+stamp.Version)
 
 	if c.AppKey != "" {
-		q := req.URL.Query()
-		q.Set("app_key", c.AppKey)
-		req.URL.RawQuery = q.Encode()
+		// This is not documented, but is supported:
+		// https://techforum.tfl.gov.uk/t/use-of-http-header-for-app-key/3113
+		req.Header.Set("app_key", c.AppKey)
 	}
 
 	return req
@@ -167,7 +165,6 @@ func (c *Client) FetchStationAvailabilities(ctx context.Context) ([]StationAvail
 		// No need to use backoff.WithContext() here as well.
 		backoff.NewExponentialBackOff(),
 		func(err error, wait time.Duration) {
-			c.redactErrAppKey(err)
 			c.Logger.WarnContext(ctx, "failed attempt",
 				slog.String("error", err.Error()),
 				// This may not be relevant to the error above, but typically
@@ -177,30 +174,5 @@ func (c *Client) FetchStationAvailabilities(ctx context.Context) ([]StationAvail
 			httpRequestRetries.Inc()
 		},
 	)
-	c.redactErrAppKey(err)
 	return stationAvailabilities, err
-}
-
-// redactErrAppKey strips the app key secret from an error in-place. This is an
-// effort to prevent the app_key leaking into logs within net/http error
-// messages. This is suboptimal, as we must remember to use it everywhere, and
-// it only matches the entire secret.
-//
-// There is a feature request to address this here:
-// https://techforum.tfl.gov.uk/t/use-of-http-header-for-app-key/3113
-func (c *Client) redactErrAppKey(err error) {
-	// We could return the err, however this may give the false impression
-	// the input error is not modified.
-
-	if c.AppKey == "" {
-		// Nothing to do, and using an empty string as a needle for the
-		// ReplaceAll() would do the wrong thing.
-		return
-	}
-	var ue *url.Error
-	if errors.As(err, &ue) {
-		// URL is already serialised to a string, so we have to use this
-		// slightly crude method.
-		ue.URL = strings.ReplaceAll(ue.URL, c.AppKey, "<redacted>")
-	}
 }
