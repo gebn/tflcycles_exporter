@@ -1,4 +1,8 @@
-package tflcycles
+// Package bikepoint implements an HTTP client for TfL's BikePoint Unified API.
+//
+// Swagger:
+// https://api.tfl.gov.uk/swagger/ui/index.html?url=/swagger/docs/v1#!/BikePoint/BikePoint_GetAll
+package bikepoint
 
 import (
 	"encoding/json"

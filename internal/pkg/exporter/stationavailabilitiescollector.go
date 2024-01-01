@@ -1,7 +1,7 @@
 package exporter
 
 import (
-	"github.com/gebn/tflcycles_exporter/internal/pkg/tflcycles"
+	"github.com/gebn/tflcycles_exporter/internal/pkg/bikepoint"
 
 	"github.com/prometheus/client_golang/prometheus"
 )
@@ -36,7 +36,7 @@ var (
 // StationAvailabilitiesCollector is a prometheus.Collector yielding metrics
 // about retrieved dock and bike availability data.
 type StationAvailabilitiesCollector struct {
-	StationAvailabilities []tflcycles.StationAvailability
+	StationAvailabilities []bikepoint.StationAvailability
 }
 
 func (StationAvailabilitiesCollector) Describe(d chan<- *prometheus.Desc) {

@@ -1,4 +1,4 @@
-package tflcycles
+package bikepoint
 
 import (
 	"context"
@@ -20,21 +20,22 @@ var (
 	// This will observe a shorter value if a given request is terminated early
 	// due to timeout.
 	httpRequestDuration = promauto.NewHistogram(prometheus.HistogramOpts{
-		Name: "tflcycles_client_http_request_duration_seconds",
+		Name: "tflcycles_bikepoint_http_request_duration_seconds",
 		Help: "Observes the duration of all requests to /BikePoint, including response parsing.",
-		// The last bucket should be just above our timeout. 52% of API calls
-		// take more than 615ms, so we weight this quite high in an effort to
-		// reasonably capture the p99.
-		Buckets: prometheus.ExponentialBuckets(.5, 1.223, 10), // 3.06
+		// The last bucket should be just above our timeout.
+		Buckets: prometheus.ExponentialBuckets(.2, 1.355, 10), // 3.08
+	})
+	// This is arguably redundant given the existence of retries, which
+	// provides an indication of failures. This metric also does not correspond
+	// to a single line of code.
+	httpRequestFailures = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "tflcycles_bikepoint_http_request_failures_total",
+		Help: "The number of BikePoint API requests that timed out or returned an invalid response",
 	})
 	httpRequestRetries = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "tflcycles_client_http_request_retries_total",
+		Name: "tflcycles_bikepoint_http_request_retries_total",
 		Help: "The number of times we timed-out or received a 5xx error from /BikePoint, and retried.",
 	})
-
-	// We do not count failures here, as retries provides an indication of
-	// that, and we're more interested in the operation as a whole failing,
-	// which is tracked by the exporter.
 )
 
 // Client is used to interact with the BikePoint API. Create instances with
@@ -135,11 +136,13 @@ func (c *Client) FetchStationAvailabilities(ctx context.Context) ([]StationAvail
 
 			resp, err := c.HTTPClient.Do(c.req.WithContext(ctx))
 			if err != nil {
+				httpRequestFailures.Inc()
 				return err
 			}
 			defer resp.Body.Close()
 
 			if resp.StatusCode != http.StatusOK {
+				httpRequestFailures.Inc()
 				msg := fmt.Sprintf("got HTTP %v", resp.StatusCode)
 				var fault error
 				b, err := io.ReadAll(resp.Body)
@@ -156,7 +159,8 @@ func (c *Client) FetchStationAvailabilities(ctx context.Context) ([]StationAvail
 
 			dec := json.NewDecoder(resp.Body)
 			if err := dec.Decode(&stationAvailabilities); err != nil {
-				// In case we've partially decoded the response.
+				httpRequestFailures.Inc()
+				// In case we partially decoded the response.
 				stationAvailabilities = stationAvailabilities[:0]
 				return err
 			}

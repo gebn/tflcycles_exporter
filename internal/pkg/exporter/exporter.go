@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gebn/tflcycles_exporter/internal/pkg/bikepoint"
 	"github.com/gebn/tflcycles_exporter/internal/pkg/promutil"
-	"github.com/gebn/tflcycles_exporter/internal/pkg/tflcycles"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -18,14 +18,14 @@ import (
 var (
 	fetchDuration = promauto.NewHistogram(prometheus.HistogramOpts{
 		Name: "tflcycles_exporter_fetch_duration_seconds",
-		Help: "Observes the end-to-end time taken to retrieve station availabilities.",
+		Help: "The end-to-end duration of BikePoint interactions, including any retries.",
 		// These are copied from the tflcycles client histogram, because in
 		// practice, that's the latency of the end-to-end scrape.
 		Buckets: prometheus.ExponentialBuckets(.5, 1.223, 10), // 3.06
 	})
 	fetchFailures = promauto.NewCounter(prometheus.CounterOpts{
 		Name: "tflcycles_exporter_fetch_failures_total",
-		Help: "Counts the number of fetch operations that have failed.",
+		Help: "The number of BikePoint interactions that failed, even after any retrying.",
 	})
 )
 
@@ -34,12 +34,12 @@ var (
 // instances with NewExporter().
 type Exporter struct {
 	Logger *slog.Logger
-	Client *tflcycles.Client
+	Client *bikepoint.Client
 
 	handlerOpts promhttp.HandlerOpts
 }
 
-func NewExporter(logger *slog.Logger, client *tflcycles.Client) *Exporter {
+func NewExporter(logger *slog.Logger, client *bikepoint.Client) *Exporter {
 	return &Exporter{
 		Logger:      logger,
 		Client:      client,

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gebn/tflcycles_exporter/internal/pkg/tflcycles"
+	"github.com/gebn/tflcycles_exporter/internal/pkg/bikepoint"
 
 	"github.com/prometheus/client_golang/prometheus/testutil"
 )
@@ -17,24 +17,24 @@ func TestStationAvailabilitiesCollector_Collect(t *testing.T) {
 	}{
 		{
 			StationAvailabilitiesCollector{
-				[]tflcycles.StationAvailability{
+				[]bikepoint.StationAvailability{
 					{
-						Station: tflcycles.Station{
+						Station: bikepoint.Station{
 							Name:  "Foo",
 							Docks: 5,
 						},
-						Availability: tflcycles.Availability{
+						Availability: bikepoint.Availability{
 							Docks:    1,
 							Bicycles: 2,
 							EBikes:   1,
 						},
 					},
 					{
-						Station: tflcycles.Station{
+						Station: bikepoint.Station{
 							Name:  "Bar",
 							Docks: 22,
 						},
-						Availability: tflcycles.Availability{
+						Availability: bikepoint.Availability{
 							Docks:    1,
 							Bicycles: 3,
 							EBikes:   5,

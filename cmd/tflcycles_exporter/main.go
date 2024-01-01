@@ -14,9 +14,9 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/gebn/tflcycles_exporter/internal/pkg/bikepoint"
 	"github.com/gebn/tflcycles_exporter/internal/pkg/exporter"
 	"github.com/gebn/tflcycles_exporter/internal/pkg/promutil"
-	"github.com/gebn/tflcycles_exporter/internal/pkg/tflcycles"
 
 	"github.com/gebn/go-stamp/v2"
 	"github.com/prometheus/client_golang/prometheus"
@@ -72,10 +72,10 @@ func app(ctx context.Context) error {
 
 	stationsHandler := exporter.NewExporter(
 		logger,
-		tflcycles.NewClient(
+		bikepoint.NewClient(
 			logger,
 			http.DefaultClient,
-			tflcycles.WithAppKey(os.Getenv("APP_KEY")),
+			bikepoint.WithAppKey(os.Getenv("APP_KEY")),
 		),
 	)
 	http.Handle("/stations", stationsHandler)
