@@ -62,7 +62,7 @@ The following steps will be suitable for the majority of Linux users.
 
 1. Extract the release archive to `/opt/tflcycles_exporter`.
 
-2. Copy `tflcycles_exporter.service` into `/etc/systemd/system`, and open the file in your favourite editor.
+2. Copy [`tflcycles_exporter.service`](tflcycles_exporter.service) into `/etc/systemd/system`, and open the file in your favourite editor.
 
    1. Ensure `User` is set to a suitable value. A dedicated account could be created with:
 
