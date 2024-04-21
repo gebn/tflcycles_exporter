@@ -92,7 +92,7 @@ In a Kubernetes context, the `/` endpoint is efficient to serve, so is suitable 
 The exporter exposes its own direct-instrumentation metrics at `/metrics`, which can be scraped normally.
 
 TfL data is exposed at `/stations`.
-Each request to this endpoint will trigger a request to the BikePoint API and return the latest data.
+Each request to this endpoint will trigger a call to the BikePoint API and render the results as metrics.
 The source data is updated at most once per minute, so the scrape interval should not be below `1m`.
 Setting it below this will still work, however it will needlessly re-retrieve the same values from TfL's API, and use up your request limit unnecessarily.
 
