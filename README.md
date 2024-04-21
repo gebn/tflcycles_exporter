@@ -50,11 +50,11 @@ Visit http://localhost:9722/stations to see the metrics.
 ## Rate Limits
 
 The exporter uses TfL's [BikePoint API][] to retrieve docking station information.
-[Registering][] for an application key will provide success and latency metrics about your API requests, as well as increase your allowance from 50 to 500 requests per minute.
-Once you have a key, pass this in an `APP_KEY` environment variable when starting the exporter, and it will be used automatically.
+[Registration][] is optional, however it provides success and latency metrics about your API requests.
+An application key can be passed in an `APP_KEY` environment variable when starting the exporter, and it will be used automatically.
 
 [BikePoint API]: https://api.tfl.gov.uk/swagger/ui/index.html?url=/swagger/docs/v1#!/BikePoint/BikePoint_GetAll
-[Registering]: https://api-portal.tfl.gov.uk/products
+[Registration]: https://api-portal.tfl.gov.uk/products
 
 ## Systemd
 
