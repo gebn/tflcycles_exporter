@@ -28,6 +28,7 @@ tflcycles_docks_available{station="Stonecutter Street, Holborn"} 19
 # HELP tflcycles_ebikes_available The number of in-service e-bikes available for hire.
 # TYPE tflcycles_ebikes_available gauge
 tflcycles_ebikes_available{station="Stonecutter Street, Holborn"} 0
+...
 ```
 
 ## Configuration
