@@ -79,6 +79,7 @@ jobs:
   containerise:
     runs-on: ubuntu-latest
     needs: [build]
+    if: ${{ github.actor != 'dependabot[bot]' }}
     steps:
     - uses: actions/checkout@v4
 
