@@ -18,28 +18,8 @@ func TestRenderIndex(t *testing.T) {
 	}
 }
 
-func TestBuildIndexHandler_NotFound(t *testing.T) {
-	t.Parallel()
 
-	handler, err := buildIndexHandler(slog.Default())
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	req, err := http.NewRequest(http.MethodGet, "/should-not-exist", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	rr := httptest.NewRecorder()
-	handler.ServeHTTP(rr, req)
-
-	if rr.Code != http.StatusNotFound {
-		t.Errorf("wanted %v for %v, got %v", http.StatusNotFound, req.URL.Path, rr.Code)
-	}
-}
-
-func TestBuildIndexHandler_Root(t *testing.T) {
+func TestBuildIndexHandler(t *testing.T) {
 	t.Parallel()
 
 	handler, err := buildIndexHandler(slog.Default())

@@ -61,8 +61,7 @@ func app(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	// This handler is also responsible for serving 404s.
-	http.Handle("/", indexHandler)
+	http.Handle("/{$}", indexHandler)
 
 	metricsHandler := promhttp.HandlerFor(
 		prometheus.DefaultGatherer,

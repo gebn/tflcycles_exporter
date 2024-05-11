@@ -42,14 +42,6 @@ func buildIndexHandler(logger *slog.Logger) (http.Handler, error) {
 	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
-
-		// Go's mux will route any unregistered path to the / handler, so we
-		// must explicitly check for 404s here.
-		if r.URL.Path != "/" {
-			http.NotFound(w, r)
-			return
-		}
-
 		if _, err := w.Write(response); err != nil {
 			logger.ErrorContext(ctx, "failed to write response",
 				slog.String("error", err.Error()))
