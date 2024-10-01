@@ -5,7 +5,7 @@ go 1.22
 require (
 	github.com/cenkalti/backoff/v4 v4.3.0
 	github.com/gebn/go-stamp/v2 v2.2.1
-	github.com/prometheus/client_golang v1.20.2
+	github.com/prometheus/client_golang v1.20.4
 )
 
 require (
