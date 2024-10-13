@@ -25,7 +25,7 @@ jobs:
     - name: Test
       run: |
         make test
-        python3 -m unittest
+        cd bin/ && python3 -m unittest discover -p '*_tests.py'
 
   build:
     runs-on: ubuntu-latest
