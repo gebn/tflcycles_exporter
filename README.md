@@ -1,12 +1,3 @@
-> [!IMPORTANT]
-> Following a [cyber attack][security-1] on TfL, API data is currently frozen in time as of 2024-09-02.
-> There is an active post on the [Tech Forum][security-2].
->
-> _Last updated: 2024-10-13_
-
-[security-1]: https://tfl.gov.uk/campaign/cyber-security-incident
-[security-2]: https://techforum.tfl.gov.uk/t/updated-24-sept-issues-with-data-feeds/3609
-
 # TfL Cycles Exporter
 
 [![CI](https://github.com/gebn/tflcycles_exporter/actions/workflows/ci.yaml/badge.svg)](https://github.com/gebn/tflcycles_exporter/actions/workflows/ci.yaml)
