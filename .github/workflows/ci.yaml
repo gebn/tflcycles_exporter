@@ -17,7 +17,7 @@ jobs:
         go-version: ${{ env.GO_VERSION }}
 
     - name: Run Staticcheck
-      uses: dominikh/staticcheck-action@v1.3.1
+      uses: dominikh/staticcheck-action@v1.4.0
       with:
         version: 2024.1.1
         install-go: false
